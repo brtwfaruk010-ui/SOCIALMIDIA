@@ -1,58 +1,419 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioInfoQuest - Bioinformática Pedro Faruk</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BioInfoQuest</title>
+  <style>
+    :root{
+      --bg:#f4f8f6;
+      --card:#ffffff;
+      --text:#18222b;
+      --muted:#667085;
+      --primary:#16704f;
+      --primary2:#21976c;
+      --border:#dce7e2;
+      --ok:#198754;
+      --bad:#dc3545;
+      --soft:#eef8f3;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    header{
+      background:linear-gradient(135deg,#0f5d43,#21976c);
+      color:white;
+      padding:28px 18px;
+      text-align:center;
+    }
+    header h1{
+      margin:0;
+      font-size:32px;
+    }
+    header p{
+      margin:8px 0 0;
+      opacity:.92;
+    }
+    main{
+      max-width:1000px;
+      margin:0 auto;
+      padding:22px;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:14px;
+      margin-bottom:20px;
+    }
+    .stat,.card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      box-shadow:0 8px 22px rgba(16,24,40,.06);
+    }
+    .stat{
+      padding:16px;
+    }
+    .stat strong{
+      display:block;
+      font-size:26px;
+      color:var(--primary);
+    }
+    .stat span{
+      color:var(--muted);
+      font-size:14px;
+    }
+    .tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:18px;
+    }
+    button{
+      border:0;
+      border-radius:10px;
+      padding:11px 14px;
+      font-weight:700;
+      cursor:pointer;
+      background:#e6eee9;
+      color:#18352b;
+    }
+    button.active,button.primary{
+      background:var(--primary);
+      color:white;
+    }
+    button:hover{
+      filter:brightness(.96);
+    }
+    .card{
+      padding:22px;
+      margin-bottom:18px;
+    }
+    .meta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .badge{
+      border:1px solid var(--border);
+      background:var(--soft);
+      color:var(--primary);
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+    .question{
+      font-size:18px;
+      line-height:1.55;
+      margin:12px 0 18px;
+      font-weight:700;
+    }
+    .option{
+      width:100%;
+      text-align:left;
+      background:white;
+      border:1px solid var(--border);
+      color:var(--text);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      margin:10px 0;
+      padding:14px;
+      border-radius:10px;
+      font-weight:500;
+    }
+    .letter{
+      min-width:30px;
+      height:30px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      background:#eef3f0;
+      font-weight:800;
+      color:var(--primary);
+    }
+    .option.correct{
+      border-color:var(--ok);
+      background:#edf9f1;
+    }
+    .option.wrong{
+      border-color:var(--bad);
+      background:#fff1f1;
+    }
+    .feedback{
+      display:none;
+      margin-top:18px;
+      border-left:5px solid var(--primary);
+      padding:16px;
+      background:#f8fbf9;
+      border-radius:8px;
+      line-height:1.6;
+    }
+    .feedback.show{
+      display:block;
+    }
+    .controls{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:18px;
+    }
+    .small{
+      color:var(--muted);
+      font-size:14px;
+    }
+    footer{
+      text-align:center;
+      padding:18px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    @media(max-width:640px){
+      header h1{font-size:26px}
+      main{padding:14px}
+      .question{font-size:16px}
+      .controls{flex-direction:column}
+    }
+  </style>
 </head>
-<body class="light-theme">
-    <div class="app-container">
-        <nav class="sidebar" id="sidebar">
-            <div class="brand">
-                <ion-icon name="dna-outline" class="brand-icon"></ion-icon>
-                <h1>BioInfoQuest</h1>
-            </div>
-            <ul class="nav-links">
-                <li class="active" data-route="dashboard">
-                    <ion-icon name="grid-outline"></ion-icon>
-                    <span>Dashboard</span>
-                </li>
-                <li data-route="study">
-                    <ion-icon name="book-outline"></ion-icon>
-                    <span>Modo Estudo</span>
-                </li>
-                <li data-route="exam">
-                    <ion-icon name="timer-outline"></ion-icon>
-                    <span>Simulado</span>
-                </li>
-                <li data-route="review">
-                    <ion-icon name="sync-outline"></ion-icon>
-                    <span>Revisão</span>
-                </li>
-            </ul>
-            <div class="sidebar-footer">
-                <button id="theme-toggle" class="icon-btn">
-                    <ion-icon name="moon-outline"></ion-icon>
-                    <span>Modo Escuro</span>
-                </button>
-            </div>
-        </nav>
+<body>
+  <header>
+    <h1>BioInfoQuest</h1>
+    <p>Bioinformática: 1 questão por módulo</p>
+  </header>
 
-        <main class="main-content">
-            <div id="content-area"></div>
-        </main>
-    </div>
+  <main>
+    <section class="stats">
+      <div class="stat"><strong id="total">6</strong><span>questões</span></div>
+      <div class="stat"><strong id="answered">0</strong><span>respondidas</span></div>
+      <div class="stat"><strong id="score">0%</strong><span>aproveitamento</span></div>
+    </section>
 
-    <script src="js/storage.js"></script>
-    <script src="js/questions.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/study.js"></script>
-    <script src="js/exam.js"></script>
-    <script src="js/review.js"></script>
-    <script src="js/app.js"></script>
+    <nav class="tabs" id="tabs"></nav>
+
+    <section class="card">
+      <div class="meta">
+        <span class="badge" id="moduleBadge"></span>
+        <span class="badge" id="topicBadge"></span>
+        <span class="badge" id="idBadge"></span>
+      </div>
+
+      <div class="question" id="questionText"></div>
+      <div id="options"></div>
+
+      <div class="feedback" id="feedback">
+        <strong id="feedbackTitle"></strong>
+        <p id="feedbackText"></p>
+      </div>
+
+      <div class="controls">
+        <button onclick="previousQuestion()">Anterior</button>
+        <button class="primary" onclick="nextQuestion()">Próxima</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    BioInfoQuest - Pedro Faruk
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        id:"BIO_M1_01",
+        module:1,
+        moduleName:"O Mundo Molecular",
+        topic:"Transcrição",
+        statement:"Durante o sequenciamento genético de um patógeno respiratório, um pesquisador isola a fita molde de DNA no sentido 3'→5' e identifica a trinca 'TAC'. Qual será o códon transcrito no RNA mensageiro (mRNA) e sua respectiva função biológica?",
+        options:{
+          A:"5' ATG 3', atuando como códon de parada (stop codon).",
+          B:"5' UAC 3', correspondente a um RNA transportador.",
+          C:"5' AUG 3', atuando como códon de iniciação (codifica Metionina).",
+          D:"5' GCA 3', atuando como região promotora.",
+          E:"5' TAC 3', demonstrando uma transcrição idêntica à fita molde."
+        },
+        answer:"C",
+        explanation:"Na transcrição, a fita de DNA molde pareia com bases complementares de RNA: A pareia com U, T pareia com A, C pareia com G e G pareia com C. Assim, TAC gera AUG, o códon de iniciação."
+      },
+      {
+        id:"BIO_M2_01",
+        module:2,
+        moduleName:"Bancos de Dados e NCBI",
+        topic:"ClinVar",
+        statement:"Durante o planejamento terapêutico de um paciente em reabilitação neurológica, o laudo genético acusa a presença de uma variante específica. Qual base de dados pública do NCBI é projetada para fornecer a classificação de patogenicidade e as evidências clínicas de variantes humanas?",
+        options:{
+          A:"PubMed Central.",
+          B:"Sequence Read Archive (SRA).",
+          C:"GenBank.",
+          D:"ClinVar.",
+          E:"OMIM."
+        },
+        answer:"D",
+        explanation:"O ClinVar é o repositório do NCBI voltado para variantes genéticas humanas, reunindo interpretações clínicas como patogênica, benigna ou de significado incerto."
+      },
+      {
+        id:"BIO_M3_01",
+        module:3,
+        moduleName:"BLAST e Anotações",
+        topic:"BLAST",
+        statement:"Um projeto analisou amostras ambientais e obteve fragmentos brutos de DNA de origem desconhecida. O objetivo é inferir o papel funcional das proteínas que esses genes poderiam expressar. Para que o sistema traduza dinamicamente o DNA inserido antes de alinhá-lo ao banco mundial de proteínas, deve-se utilizar o:",
+        options:{
+          A:"blastn.",
+          B:"blastp.",
+          C:"blastx.",
+          D:"tblastn.",
+          E:"AlphaFold."
+        },
+        answer:"C",
+        explanation:"O blastx recebe uma sequência de nucleotídeos, traduz essa sequência in silico nos possíveis quadros de leitura e compara o resultado com bancos de proteínas."
+      },
+      {
+        id:"BIO_M4_01",
+        module:4,
+        moduleName:"DATASUS e Saúde Pública",
+        topic:"TABNET",
+        statement:"Uma gestão municipal de saúde pública requer relatórios semanais de letalidade estratificados por faixa etária, visando alocação rápida de leitos em surtos. A equipe, sem domínio em programação analítica Python, pode empregar de forma imediata e eficaz qual plataforma pública gerencial provida pelo Ministério da Saúde?",
+        options:{
+          A:"Criação de scripts na biblioteca Pandas em Jupyter Notebook.",
+          B:"O módulo tabular interativo TABNET, do DATASUS.",
+          C:"A ferramenta BLAST do NCBI.",
+          D:"A interface SRA Toolkit no terminal Linux.",
+          E:"O repositório dbGaP."
+        },
+        answer:"B",
+        explanation:"O TABNET permite consultar, cruzar e tabular dados do DATASUS diretamente pelo navegador, sendo útil para gestores que precisam de tabelas e indicadores sem programar."
+      },
+      {
+        id:"BIO_M5_01",
+        module:5,
+        moduleName:"IA e Ética",
+        topic:"Privacidade genética",
+        statement:"Uma clínica propõe disponibilizar publicamente um banco de variantes genéticas de pacientes após apagar CPF, nomes e idades. Seguindo princípios atuais de ética, LGPD e genômica computacional, esse arquivo genético está seguro para liberação pública sem risco de reidentificação?",
+        options:{
+          A:"Sim, porque a LGPD não se aplica a dados genéticos.",
+          B:"Depende apenas do E-value usado no alinhamento.",
+          C:"Não; dados genéticos carregam uma assinatura biológica única e podem permitir reidentificação.",
+          D:"Sim, basta remover colunas demográficas da planilha.",
+          E:"O risco depende apenas de dados do TABNET."
+        },
+        answer:"C",
+        explanation:"Dados genéticos são dados sensíveis. Mesmo sem nome ou CPF, variantes e genomas podem permitir reidentificação por parentesco, bancos genéticos e cruzamentos computacionais."
+      },
+      {
+        id:"BIO_M6_01",
+        module:6,
+        moduleName:"Integração e Revisão",
+        topic:"FASTA",
+        statement:"No laboratório in silico, você abre um arquivo de texto. A primeira linha começa com o símbolo '>', seguido do nome da sequência. Abaixo aparecem blocos contínuos de A, T, C e G. Qual é o formato descrito?",
+        options:{
+          A:"VCF.",
+          B:"FASTA.",
+          C:"TABNET.",
+          D:"SRA Toolkit.",
+          E:"CSV."
+        },
+        answer:"B",
+        explanation:"O FASTA é um formato textual simples usado para representar sequências biológicas. A linha de cabeçalho começa com '>' e as linhas seguintes trazem a sequência."
+      }
+    ];
+
+    let current = 0;
+    const answers = {};
+
+    function renderTabs(){
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = "";
+      questions.forEach((q,i)=>{
+        const btn = document.createElement("button");
+        btn.textContent = "Módulo " + q.module;
+        btn.className = i === current ? "active" : "";
+        btn.onclick = () => {
+          current = i;
+          render();
+        };
+        tabs.appendChild(btn);
+      });
+    }
+
+    function render(){
+      const q = questions[current];
+
+      document.getElementById("moduleBadge").textContent = "Módulo " + q.module + ": " + q.moduleName;
+      document.getElementById("topicBadge").textContent = q.topic;
+      document.getElementById("idBadge").textContent = q.id;
+      document.getElementById("questionText").textContent = q.statement;
+
+      const options = document.getElementById("options");
+      options.innerHTML = "";
+
+      Object.entries(q.options).forEach(([letter,text])=>{
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.innerHTML = `<span class="letter">${letter}</span><span>${text}</span>`;
+        btn.onclick = () => answer(letter);
+
+        if(answers[q.id]){
+          if(letter === q.answer) btn.classList.add("correct");
+          if(letter === answers[q.id] && letter !== q.answer) btn.classList.add("wrong");
+        }
+
+        options.appendChild(btn);
+      });
+
+      const feedback = document.getElementById("feedback");
+      const feedbackTitle = document.getElementById("feedbackTitle");
+      const feedbackText = document.getElementById("feedbackText");
+
+      if(answers[q.id]){
+        feedback.classList.add("show");
+        feedbackTitle.textContent = answers[q.id] === q.answer ? "Resposta correta!" : "Resposta incorreta.";
+        feedbackText.textContent = "Gabarito: " + q.answer + ". " + q.explanation;
+      }else{
+        feedback.classList.remove("show");
+        feedbackTitle.textContent = "";
+        feedbackText.textContent = "";
+      }
+
+      renderTabs();
+      updateStats();
+    }
+
+    function answer(letter){
+      answers[questions[current].id] = letter;
+      render();
+    }
+
+    function nextQuestion(){
+      current = (current + 1) % questions.length;
+      render();
+    }
+
+    function previousQuestion(){
+      current = (current - 1 + questions.length) % questions.length;
+      render();
+    }
+
+    function updateStats(){
+      const answered = Object.keys(answers).length;
+      let correct = 0;
+
+      questions.forEach(q=>{
+        if(answers[q.id] === q.answer) correct++;
+      });
+
+      document.getElementById("total").textContent = questions.length;
+      document.getElementById("answered").textContent = answered;
+      document.getElementById("score").textContent = answered ? Math.round((correct / answered) * 100) + "%" : "0%";
+    }
+
+    render();
+  </script>
 </body>
 </html>
